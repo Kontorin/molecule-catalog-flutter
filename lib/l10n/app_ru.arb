@@ -1,0 +1,38 @@
+{
+  "@@locale": "ru",
+  "catalogTitle": "Каталог молекул",
+  "libraryTitle": "Библиотека молекул",
+  "recordCount": "Записей: {count}",
+  "@recordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHint": "Поиск по названию",
+  "clearSearch": "Очистить поиск",
+  "nothingFound": "Ничего не найдено",
+  "back": "Назад",
+  "darkTheme": "Тёмная тема",
+  "language": "Язык",
+  "russian": "Русский",
+  "english": "Английский",
+  "molecularProperties": "Молекулярные свойства",
+  "formula": "Формула",
+  "molecularWeight": "Молекулярная масса",
+  "molecularWeightUnit": "Da",
+  "moleculeNotFound": "Молекула не найдена",
+  "structurePlaceholder": "Изображение структуры недоступно",
+  "mechanismsTitle": "Механизмы действия",
+  "noMechanisms": "В этом каталоге нет данных о механизме действия",
+  "mechanismId": "ID механизма",
+  "target": "Мишень",
+  "mechanismTitle": "Механизм действия",
+  "openMechanism": "Открыть механизм",
+  "mechanismNotFound": "Механизм для этой молекулы не найден",
+  "actionType": "Тип действия",
+  "targetId": "ID мишени",
+  "sourceMoleculeId": "ID формы молекулы",
+  "parentMoleculeId": "ID исходной молекулы"
+}

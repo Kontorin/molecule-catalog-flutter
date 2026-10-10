@@ -1,0 +1,38 @@
+{
+  "@@locale": "en",
+  "catalogTitle": "Molecule catalog",
+  "libraryTitle": "Molecule library",
+  "recordCount": "Records: {count}",
+  "@recordCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchHint": "Search by name",
+  "clearSearch": "Clear search",
+  "nothingFound": "Nothing found",
+  "back": "Back",
+  "darkTheme": "Dark theme",
+  "language": "Language",
+  "russian": "Russian",
+  "english": "English",
+  "molecularProperties": "Molecular properties",
+  "formula": "Formula",
+  "molecularWeight": "Molecular weight",
+  "molecularWeightUnit": "Da",
+  "moleculeNotFound": "Molecule not found",
+  "structurePlaceholder": "Structure image unavailable",
+  "mechanismsTitle": "Mechanisms of action",
+  "noMechanisms": "No mechanism data in this catalog",
+  "mechanismId": "Mechanism ID",
+  "target": "Target",
+  "mechanismTitle": "Mechanism of action",
+  "openMechanism": "Open mechanism",
+  "mechanismNotFound": "Mechanism not found for this molecule",
+  "actionType": "Action type",
+  "targetId": "Target ID",
+  "sourceMoleculeId": "Molecule form ID",
+  "parentMoleculeId": "Parent molecule ID"
+}
