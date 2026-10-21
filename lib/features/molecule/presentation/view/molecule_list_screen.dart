@@ -57,12 +57,13 @@ class _MoleculeListScreenState extends State<MoleculeListScreen> {
                         l10n.libraryTitle,
                         style: theme.textTheme.headlineSmall,
                       ),
-                      Text(
-                        l10n.recordCount(state.molecules.length),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                      if (state.status == MoleculeListStatus.loaded)
+                        Text(
+                          l10n.recordCount(state.molecules.length),
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
-                      ),
                       const SizedBox(height: 16),
                       TextField(
                         controller: _searchController,
@@ -87,7 +88,9 @@ class _MoleculeListScreenState extends State<MoleculeListScreen> {
                   ),
                 ),
                 Expanded(
-                  child: state.molecules.isEmpty
+                  child: state.status == MoleculeListStatus.loading
+                      ? const Center(child: CircularProgressIndicator())
+                      : state.molecules.isEmpty
                       ? Center(child: Text(l10n.nothingFound))
                       : ListView.builder(
                           key: const PageStorageKey<String>('molecule-list'),

@@ -11,23 +11,42 @@ class MoleculeListCubit extends Cubit<MoleculeListState> {
   final IMoleculeRepository _repository;
 
   Future<void> load() async {
+    emit(state.copyWith(status: MoleculeListStatus.loading));
+
     final molecules = await _repository.getMolecules();
     if (isClosed) return;
 
-    emit(state.copyWith(allMolecules: molecules));
-    search(state.query);
+    emit(
+      state.copyWith(
+        allMolecules: molecules,
+        molecules: _filterMolecules(molecules, state.query),
+        status: MoleculeListStatus.loaded,
+      ),
+    );
   }
 
   void search(String query) {
+    emit(
+      state.copyWith(
+        molecules: _filterMolecules(state.allMolecules, query),
+        query: query,
+      ),
+    );
+  }
+
+  List<MoleculeModel> _filterMolecules(
+    List<MoleculeModel> molecules,
+    String query,
+  ) {
     final normalizedQuery = query.trim().toLowerCase();
     final matches = <MoleculeModel>[];
 
-    for (final molecule in state.allMolecules) {
+    for (final molecule in molecules) {
       if (molecule.name.toLowerCase().contains(normalizedQuery)) {
         matches.add(molecule);
       }
     }
 
-    emit(state.copyWith(molecules: matches, query: query));
+    return matches;
   }
 }
