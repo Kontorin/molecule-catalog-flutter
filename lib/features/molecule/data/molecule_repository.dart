@@ -18,15 +18,4 @@ class MoleculeRepository implements IMoleculeRepository {
 
     return null;
   }
-
-  @override
-  Future<MoleculeModel?> getMoleculeByName(String name) async {
-    for (final molecule in mockMolecules) {
-      if (molecule.name == name) {
-        return molecule;
-      }
-    }
-
-    return null;
-  }
 }
