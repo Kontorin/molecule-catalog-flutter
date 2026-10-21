@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../common/navigation/app_routes.dart';
 import '../../../../common/widgets/app_settings_actions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../bloc/list/molecule_list_cubit.dart';
@@ -103,7 +104,7 @@ class _MoleculeListScreenState extends State<MoleculeListScreen> {
                               key: ValueKey(molecule.id),
                               molecule: molecule,
                               onTap: () => context.push(
-                                '/molecule/${Uri.encodeComponent(molecule.id)}',
+                                AppRoutes.molecule(molecule.id),
                               ),
                             );
                           },

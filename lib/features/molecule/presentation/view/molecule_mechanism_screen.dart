@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../common/navigation/app_routes.dart';
 import '../../../../common/widgets/app_settings_actions.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../molecule/domain/i_molecule_repository.dart';
-import '../../../molecule/domain/molecule_model.dart';
-import '../../domain/i_mechanism_repository.dart';
-import '../../domain/mechanism_model.dart';
-import '../bloc/detail/mechanism_detail_cubit.dart';
-import '../bloc/detail/mechanism_detail_state.dart';
+import '../../../mechanism/domain/i_mechanism_repository.dart';
+import '../../../mechanism/domain/mechanism_model.dart';
+import '../../domain/i_molecule_repository.dart';
+import '../../domain/molecule_model.dart';
+import '../bloc/mechanism/molecule_mechanism_cubit.dart';
+import '../bloc/mechanism/molecule_mechanism_state.dart';
 
-class MechanismDetailScreen extends StatelessWidget {
-  const MechanismDetailScreen({
+class MoleculeMechanismScreen extends StatelessWidget {
+  const MoleculeMechanismScreen({
     super.key,
     required this.moleculeId,
     required this.mechanismId,
@@ -26,7 +27,7 @@ class MechanismDetailScreen extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return BlocProvider(
-      create: (context) => MechanismDetailCubit(
+      create: (context) => MoleculeMechanismCubit(
         context.read<IMechanismRepository>(),
         context.read<IMoleculeRepository>(),
       )..load(moleculeId, mechanismId),
@@ -49,22 +50,22 @@ class MechanismDetailScreen extends StatelessWidget {
                     if (context.canPop()) {
                       context.pop();
                     } else {
-                      context.go('/molecule/${Uri.encodeComponent(moleculeId)}');
+                      context.go(AppRoutes.molecule(moleculeId));
                     }
                   },
                 ),
               ),
               Expanded(
-                child: BlocBuilder<MechanismDetailCubit, MechanismDetailState>(
+                child: BlocBuilder<MoleculeMechanismCubit, MoleculeMechanismState>(
                   builder: (context, state) {
                     return switch (state) {
-                      MechanismDetailInitial() => const Center(
+                      MoleculeMechanismInitial() => const Center(
                         child: CircularProgressIndicator(),
                       ),
-                      MechanismDetailNotFound() => Center(
+                      MoleculeMechanismNotFound() => Center(
                         child: Text(l10n.mechanismNotFound),
                       ),
-                      MechanismDetailLoaded(
+                      MoleculeMechanismLoaded(
                         :final mechanism,
                         :final molecule,
                       ) => _MechanismDetails(

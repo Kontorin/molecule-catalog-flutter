@@ -1,8 +1,10 @@
 import 'package:go_router/go_router.dart';
 
-import '../../features/mechanism/presentation/view/mechanism_detail_screen.dart';
 import '../../features/molecule/presentation/view/molecule_detail_screen.dart';
 import '../../features/molecule/presentation/view/molecule_list_screen.dart';
+import '../../features/molecule/presentation/view/molecule_mechanism_screen.dart';
+
+import 'app_routes.dart';
 
 class AppRouter {
   static GoRouter create() {
@@ -11,22 +13,24 @@ class AppRouter {
     return GoRouter(
       routes: [
         GoRoute(
-          path: '/',
+          path: AppRoutes.list,
           builder: (context, state) => const MoleculeListScreen(),
           routes: [
             GoRoute(
-              path: 'molecule/:id',
+              path: AppRoutes.moleculePath,
               builder: (context, state) => MoleculeDetailScreen(
                 key: state.pageKey,
-                id: state.pathParameters['id']!,
+                id: state.pathParameters[AppRoutes.moleculeIdParameter]!,
               ),
               routes: [
                 GoRoute(
-                  path: 'mechanism/:mechanismId',
-                  builder: (context, state) => MechanismDetailScreen(
+                  path: AppRoutes.mechanismPath,
+                  builder: (context, state) => MoleculeMechanismScreen(
                     key: state.pageKey,
-                    moleculeId: state.pathParameters['id']!,
-                    mechanismId: state.pathParameters['mechanismId']!,
+                    moleculeId:
+                        state.pathParameters[AppRoutes.moleculeIdParameter]!,
+                    mechanismId:
+                        state.pathParameters[AppRoutes.mechanismIdParameter]!,
                   ),
                 ),
               ],

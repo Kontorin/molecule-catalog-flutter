@@ -18,9 +18,14 @@ class MechanismRepository implements IMechanismRepository {
   }
 
   @override
-  Future<MechanismModel?> getMechanism(int id) async {
-    for (final mechanism in mockMechanisms) {
-      if (mechanism.id == id) {
+  Future<MechanismModel?> getMechanismForMolecule(
+    String moleculeId,
+    int mechanismId,
+  ) async {
+    final mechanisms = await getMechanismsForMolecule(moleculeId);
+
+    for (final mechanism in mechanisms) {
+      if (mechanism.id == mechanismId) {
         return mechanism;
       }
     }

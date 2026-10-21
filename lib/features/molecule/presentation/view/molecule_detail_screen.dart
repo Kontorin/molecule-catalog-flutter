@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../common/navigation/app_routes.dart';
 import '../../../../common/widgets/app_settings_actions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../mechanism/domain/i_mechanism_repository.dart';
@@ -44,7 +45,7 @@ class MoleculeDetailScreen extends StatelessWidget {
                     if (context.canPop()) {
                       context.pop();
                     } else {
-                      context.go('/');
+                      context.go(AppRoutes.list);
                     }
                   },
                 ),
@@ -146,8 +147,7 @@ class _MoleculeDetails extends StatelessWidget {
                         child: const Icon(Icons.chevron_right),
                       ),
                       onTap: () => context.push(
-                        '/molecule/${Uri.encodeComponent(molecule.id)}'
-                        '/mechanism/${mechanism.id}',
+                        AppRoutes.mechanism(molecule.id, mechanism.id),
                       ),
                     ),
               ],
