@@ -12,6 +12,7 @@ import '../../domain/i_molecule_repository.dart';
 import '../../domain/molecule_model.dart';
 import '../bloc/detail/molecule_detail_cubit.dart';
 import '../bloc/detail/molecule_detail_state.dart';
+import '../utils/catalog_value_presentation.dart';
 import '../utils/molecule_properties_presentation.dart';
 
 class MoleculeDetailScreen extends StatelessWidget {
@@ -141,10 +142,10 @@ class _MoleculeDetails extends StatelessWidget {
                   for (final mechanism in mechanisms)
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text(mechanism.description),
+                      title: Text(mechanism.description.orUnavailable(l10n)),
                       subtitle: Text(
                         '${l10n.mechanismId}: ${mechanism.id}\n'
-                        '${l10n.target}: ${mechanism.targetName}',
+                        '${l10n.target}: ${mechanism.targetName.orUnavailable(l10n)}',
                       ),
                       trailing: Tooltip(
                         message: l10n.openMechanism,

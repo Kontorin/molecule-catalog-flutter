@@ -12,6 +12,7 @@ import '../../domain/i_molecule_repository.dart';
 import '../../domain/molecule_model.dart';
 import '../bloc/mechanism/molecule_mechanism_cubit.dart';
 import '../bloc/mechanism/molecule_mechanism_state.dart';
+import '../utils/catalog_value_presentation.dart';
 
 class MoleculeMechanismScreen extends StatelessWidget {
   const MoleculeMechanismScreen({
@@ -119,19 +120,30 @@ class _MechanismDetails extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(molecule.id, style: theme.textTheme.bodyMedium),
                 const Divider(height: 24),
-                Text(mechanism.description, style: theme.textTheme.titleMedium),
+                Text(
+                  mechanism.description.orUnavailable(l10n),
+                  style: theme.textTheme.titleMedium,
+                ),
                 const SizedBox(height: 12),
                 Text('${l10n.mechanismId}: ${mechanism.id}'),
                 const SizedBox(height: 8),
-                Text('${l10n.actionType}: ${mechanism.actionType}'),
+                Text(
+                  '${l10n.actionType}: ${mechanism.actionType.orUnavailable(l10n)}',
+                ),
                 const SizedBox(height: 8),
-                Text('${l10n.target}: ${mechanism.targetName}'),
+                Text(
+                  '${l10n.target}: ${mechanism.targetName.orUnavailable(l10n)}',
+                ),
                 const SizedBox(height: 8),
-                Text('${l10n.targetId}: ${mechanism.targetId}'),
+                Text(
+                  '${l10n.targetId}: ${mechanism.targetId.orUnavailable(l10n)}',
+                ),
                 const Divider(height: 24),
                 Text('${l10n.sourceMoleculeId}: ${mechanism.moleculeId}'),
                 const SizedBox(height: 8),
-                Text('${l10n.parentMoleculeId}: ${mechanism.parentMoleculeId}'),
+                Text(
+                  '${l10n.parentMoleculeId}: ${mechanism.parentMoleculeId.orUnavailable(l10n)}',
+                ),
               ],
             ),
           ),

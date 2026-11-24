@@ -31,7 +31,7 @@
   "moleculeNotFound": "Молекула не найдена",
   "structurePlaceholder": "Изображение структуры недоступно",
   "mechanismsTitle": "Механизмы действия",
-  "noMechanisms": "В этом каталоге нет данных о механизме действия",
+  "noMechanisms": "В ChEMBL нет данных о механизме действия для этой молекулы",
   "mechanismId": "ID механизма",
   "target": "Мишень",
   "mechanismTitle": "Механизм действия",

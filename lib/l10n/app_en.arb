@@ -31,7 +31,7 @@
   "moleculeNotFound": "Molecule not found",
   "structurePlaceholder": "Structure image unavailable",
   "mechanismsTitle": "Mechanisms of action",
-  "noMechanisms": "No mechanism data in this catalog",
+  "noMechanisms": "No mechanism data for this molecule in ChEMBL",
   "mechanismId": "Mechanism ID",
   "target": "Target",
   "mechanismTitle": "Mechanism of action",

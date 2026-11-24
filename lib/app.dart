@@ -8,6 +8,8 @@ import 'common/network/dio_client.dart';
 import 'common/settings/app_settings_cubit.dart';
 import 'common/settings/app_settings_state.dart';
 import 'common/theme/app_theme.dart';
+import 'features/mechanism/data/api/mechanism_api.dart';
+import 'features/mechanism/data/data_sources/network_mechanism_data_source.dart';
 import 'features/mechanism/data/mechanism_repository.dart';
 import 'features/mechanism/domain/i_mechanism_repository.dart';
 import 'features/molecule/data/api/molecule_api.dart';
@@ -44,7 +46,9 @@ class _AppState extends State<App> {
               MoleculeRepository(NetworkMoleculeDataSource(MoleculeApi(_dio))),
         ),
         RepositoryProvider<IMechanismRepository>(
-          create: (context) => MechanismRepository(),
+          create: (context) => MechanismRepository(
+            NetworkMechanismDataSource(MechanismApi(_dio)),
+          ),
         ),
       ],
       child: MultiBlocProvider(

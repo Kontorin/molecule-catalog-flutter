@@ -2,7 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/network/load_exception.dart';
 import '../../../../mechanism/domain/i_mechanism_repository.dart';
+import '../../../../mechanism/domain/mechanism_model.dart';
 import '../../../domain/i_molecule_repository.dart';
+import '../../../domain/molecule_model.dart';
 import 'molecule_mechanism_state.dart';
 
 class MoleculeMechanismCubit extends Cubit<MoleculeMechanismState> {
@@ -23,21 +25,16 @@ class MoleculeMechanismCubit extends Cubit<MoleculeMechanismState> {
     }
 
     try {
-      final mechanism = await _mechanismRepository.getMechanismForMolecule(
-        moleculeId,
-        id,
-      );
+      final results = await Future.wait<Object?>([
+        _mechanismRepository.getMechanismForMolecule(moleculeId, id),
+        _moleculeRepository.getMolecule(moleculeId),
+      ]);
       if (isClosed) return;
 
-      if (mechanism == null) {
-        emit(const MoleculeMechanismNotFound());
-        return;
-      }
+      final mechanism = results[0] as MechanismModel?;
+      final molecule = results[1] as MoleculeModel?;
 
-      final molecule = await _moleculeRepository.getMolecule(moleculeId);
-      if (isClosed) return;
-
-      if (molecule == null) {
+      if (mechanism == null || molecule == null) {
         emit(const MoleculeMechanismNotFound());
         return;
       }
