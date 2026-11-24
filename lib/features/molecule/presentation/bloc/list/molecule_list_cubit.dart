@@ -1,8 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/network/load_exception.dart';
 import '../../../domain/i_molecule_repository.dart';
-import '../../../domain/molecule_model.dart';
 import 'molecule_list_state.dart';
 
 class MoleculeListCubit extends Cubit<MoleculeListState> {
@@ -10,50 +11,48 @@ class MoleculeListCubit extends Cubit<MoleculeListState> {
     : super(MoleculeListState(molecules: [], query: ''));
 
   final IMoleculeRepository _repository;
+  Timer? _searchDebounce;
+  int _requestId = 0;
 
   Future<void> load() async {
     if (isClosed) return;
-    emit(state.copyWith(status: MoleculeListStatus.loading));
+    _searchDebounce?.cancel();
+    final requestId = ++_requestId;
+    final query = state.query;
+    emit(MoleculeListState(molecules: [], query: query));
 
     try {
-      final molecules = await _repository.getMolecules();
-      if (isClosed) return;
+      final molecules = await _repository.getMolecules(query: query);
+      if (isClosed || requestId != _requestId) return;
 
       emit(
-        state.copyWith(
-          allMolecules: molecules,
-          molecules: _filterMolecules(molecules, state.query),
+        MoleculeListState(
+          query: query,
+          molecules: molecules,
           status: MoleculeListStatus.loaded,
         ),
       );
     } on LoadException catch (error) {
-      if (isClosed) return;
+      if (isClosed || requestId != _requestId) return;
       emit(state.copyWith(status: MoleculeListStatus.failure, error: error));
     }
   }
 
   void search(String query) {
-    emit(
-      state.copyWith(
-        molecules: _filterMolecules(state.allMolecules, query),
-        query: query,
-      ),
+    if (isClosed || query == state.query) return;
+    _searchDebounce?.cancel();
+    _requestId++;
+    emit(MoleculeListState(molecules: [], query: query));
+    _searchDebounce = Timer(
+      const Duration(milliseconds: 300),
+      () => unawaited(load()),
     );
   }
 
-  List<MoleculeModel> _filterMolecules(
-    List<MoleculeModel> molecules,
-    String query,
-  ) {
-    final normalizedQuery = query.trim().toLowerCase();
-    final matches = <MoleculeModel>[];
-
-    for (final molecule in molecules) {
-      if (molecule.name.toLowerCase().contains(normalizedQuery)) {
-        matches.add(molecule);
-      }
-    }
-
-    return matches;
+  @override
+  Future<void> close() {
+    _searchDebounce?.cancel();
+    _requestId++;
+    return super.close();
   }
 }

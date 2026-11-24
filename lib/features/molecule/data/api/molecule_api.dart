@@ -8,12 +8,22 @@ class MoleculeApi {
 
   final Dio _dio;
 
-  Future<MoleculeListDto> getMolecules() async {
+  Future<MoleculeListDto> getMolecules({String query = ''}) async {
+    final searchQuery = query.trim();
+    final isChemblId = RegExp(
+      r'^CHEMBL\d+$',
+      caseSensitive: false,
+    ).hasMatch(searchQuery);
     final response = await _dio.get<Map<String, dynamic>>(
       'molecule.json',
       queryParameters: {
         'limit': 20,
-        'pref_name__isnull': false,
+        if (isChemblId)
+          'molecule_chembl_id': searchQuery.toUpperCase()
+        else ...{
+          'pref_name__isnull': false,
+          if (searchQuery.isNotEmpty) 'pref_name__icontains': searchQuery,
+        },
         'order_by': 'molecule_chembl_id',
       },
     );

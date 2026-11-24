@@ -12,8 +12,8 @@ class NetworkMoleculeDataSource implements IMoleculeDataSource {
   final MoleculeApi _api;
 
   @override
-  Future<List<MoleculeDto>> getMolecules() async {
-    final response = await _load(_api.getMolecules);
+  Future<List<MoleculeDto>> getMolecules({String query = ''}) async {
+    final response = await _load(() => _api.getMolecules(query: query));
     return response.molecules;
   }
 

@@ -10,7 +10,7 @@
       }
     }
   },
-  "searchHint": "Search by name",
+  "searchHint": "Name or ChEMBL ID",
   "clearSearch": "Clear search",
   "nothingFound": "Nothing found",
   "networkError": "Unable to connect. Check your internet connection.",

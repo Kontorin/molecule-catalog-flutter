@@ -10,8 +10,8 @@ class MoleculeRepository implements IMoleculeRepository {
   final IMoleculeDataSource _dataSource;
 
   @override
-  Future<List<MoleculeModel>> getMolecules() async {
-    final molecules = await _dataSource.getMolecules();
+  Future<List<MoleculeModel>> getMolecules({String query = ''}) async {
+    final molecules = await _dataSource.getMolecules(query: query);
     return List.unmodifiable(molecules.map((molecule) => molecule.toModel()));
   }
 
