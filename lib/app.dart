@@ -1,13 +1,17 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import 'common/navigation/app_router.dart';
+import 'common/network/dio_client.dart';
 import 'common/settings/app_settings_cubit.dart';
 import 'common/settings/app_settings_state.dart';
 import 'common/theme/app_theme.dart';
 import 'features/mechanism/data/mechanism_repository.dart';
 import 'features/mechanism/domain/i_mechanism_repository.dart';
+import 'features/molecule/data/api/molecule_api.dart';
+import 'features/molecule/data/data_sources/network_molecule_data_source.dart';
 import 'features/molecule/data/molecule_repository.dart';
 import 'features/molecule/domain/i_molecule_repository.dart';
 import 'features/molecule/presentation/bloc/list/molecule_list_cubit.dart';
@@ -21,11 +25,13 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  final Dio _dio = DioClient.create();
   final GoRouter _router = AppRouter.create();
 
   @override
   void dispose() {
     _router.dispose();
+    _dio.close(force: true);
     super.dispose();
   }
 
@@ -34,7 +40,8 @@ class _AppState extends State<App> {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<IMoleculeRepository>(
-          create: (context) => MoleculeRepository(),
+          create: (context) =>
+              MoleculeRepository(NetworkMoleculeDataSource(MoleculeApi(_dio))),
         ),
         RepositoryProvider<IMechanismRepository>(
           create: (context) => MechanismRepository(),
@@ -44,9 +51,8 @@ class _AppState extends State<App> {
         providers: [
           BlocProvider(create: (context) => AppSettingsCubit()),
           BlocProvider(
-            create: (context) => MoleculeListCubit(
-              context.read<IMoleculeRepository>(),
-            )..load(),
+            create: (context) =>
+                MoleculeListCubit(context.read<IMoleculeRepository>())..load(),
           ),
         ],
         child: BlocBuilder<AppSettingsCubit, AppSettingsState>(

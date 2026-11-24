@@ -1,3 +1,4 @@
+import '../../../../../common/network/load_exception.dart';
 import '../../../../mechanism/domain/mechanism_model.dart';
 import '../../../domain/molecule_model.dart';
 
@@ -21,4 +22,10 @@ final class MoleculeMechanismLoaded extends MoleculeMechanismState {
 
 final class MoleculeMechanismNotFound extends MoleculeMechanismState {
   const MoleculeMechanismNotFound();
+}
+
+final class MoleculeMechanismFailure extends MoleculeMechanismState {
+  const MoleculeMechanismFailure(this.error);
+
+  final LoadException error;
 }

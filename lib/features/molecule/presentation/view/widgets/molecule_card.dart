@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../../common/theme/image_sources.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../domain/molecule_model.dart';
+import '../../utils/molecule_properties_presentation.dart';
 
 class MoleculeCard extends StatelessWidget {
-  const MoleculeCard({
-    super.key,
-    required this.molecule,
-    required this.onTap,
-  });
+  const MoleculeCard({super.key, required this.molecule, required this.onTap});
 
   final MoleculeModel molecule;
   final VoidCallback onTap;
@@ -56,7 +53,8 @@ class MoleculeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${l10n.formula}: ${molecule.properties.formula}',
+                      '${l10n.formula}: '
+                      '${molecule.properties.formattedFormula(l10n)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),

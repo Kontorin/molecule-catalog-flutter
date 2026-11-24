@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../common/network/load_exception.dart';
 import '../../../domain/i_molecule_repository.dart';
 import '../../../domain/molecule_model.dart';
 import 'molecule_list_state.dart';
@@ -11,18 +12,24 @@ class MoleculeListCubit extends Cubit<MoleculeListState> {
   final IMoleculeRepository _repository;
 
   Future<void> load() async {
+    if (isClosed) return;
     emit(state.copyWith(status: MoleculeListStatus.loading));
 
-    final molecules = await _repository.getMolecules();
-    if (isClosed) return;
+    try {
+      final molecules = await _repository.getMolecules();
+      if (isClosed) return;
 
-    emit(
-      state.copyWith(
-        allMolecules: molecules,
-        molecules: _filterMolecules(molecules, state.query),
-        status: MoleculeListStatus.loaded,
-      ),
-    );
+      emit(
+        state.copyWith(
+          allMolecules: molecules,
+          molecules: _filterMolecules(molecules, state.query),
+          status: MoleculeListStatus.loaded,
+        ),
+      );
+    } on LoadException catch (error) {
+      if (isClosed) return;
+      emit(state.copyWith(status: MoleculeListStatus.failure, error: error));
+    }
   }
 
   void search(String query) {

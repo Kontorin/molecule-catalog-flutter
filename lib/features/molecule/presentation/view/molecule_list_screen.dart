@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../common/navigation/app_routes.dart';
 import '../../../../common/widgets/app_settings_actions.dart';
+import '../../../../common/widgets/load_error_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../bloc/list/molecule_list_cubit.dart';
 import '../bloc/list/molecule_list_state.dart';
@@ -80,7 +81,9 @@ class _MoleculeListScreenState extends State<MoleculeListScreen> {
                                   icon: const Icon(Icons.clear),
                                   onPressed: () {
                                     _searchController.clear();
-                                    context.read<MoleculeListCubit>().search('');
+                                    context.read<MoleculeListCubit>().search(
+                                      '',
+                                    );
                                   },
                                 ),
                         ),
@@ -89,26 +92,36 @@ class _MoleculeListScreenState extends State<MoleculeListScreen> {
                   ),
                 ),
                 Expanded(
-                  child: state.status == MoleculeListStatus.loading
-                      ? const Center(child: CircularProgressIndicator())
-                      : state.molecules.isEmpty
-                      ? Center(child: Text(l10n.nothingFound))
-                      : ListView.builder(
-                          key: const PageStorageKey<String>('molecule-list'),
-                          padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-                          itemCount: state.molecules.length,
-                          itemBuilder: (context, index) {
-                            final molecule = state.molecules[index];
-
-                            return MoleculeCard(
-                              key: ValueKey(molecule.id),
-                              molecule: molecule,
-                              onTap: () => context.push(
-                                AppRoutes.molecule(molecule.id),
+                  child: switch (state.status) {
+                    MoleculeListStatus.loading => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    MoleculeListStatus.failure => LoadErrorView(
+                      error: state.error!,
+                      onRetry: context.read<MoleculeListCubit>().load,
+                    ),
+                    MoleculeListStatus.loaded =>
+                      state.molecules.isEmpty
+                          ? Center(child: Text(l10n.nothingFound))
+                          : ListView.builder(
+                              key: const PageStorageKey<String>(
+                                'molecule-list',
                               ),
-                            );
-                          },
-                        ),
+                              padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                              itemCount: state.molecules.length,
+                              itemBuilder: (context, index) {
+                                final molecule = state.molecules[index];
+
+                                return MoleculeCard(
+                                  key: ValueKey(molecule.id),
+                                  molecule: molecule,
+                                  onTap: () => context.push(
+                                    AppRoutes.molecule(molecule.id),
+                                  ),
+                                );
+                              },
+                            ),
+                  },
                 ),
               ],
             );

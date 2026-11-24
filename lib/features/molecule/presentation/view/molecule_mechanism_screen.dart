@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../common/navigation/app_routes.dart';
 import '../../../../common/widgets/app_settings_actions.dart';
+import '../../../../common/widgets/load_error_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../mechanism/domain/i_mechanism_repository.dart';
 import '../../../mechanism/domain/mechanism_model.dart';
@@ -56,25 +57,34 @@ class MoleculeMechanismScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: BlocBuilder<MoleculeMechanismCubit, MoleculeMechanismState>(
-                  builder: (context, state) {
-                    return switch (state) {
-                      MoleculeMechanismInitial() => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      MoleculeMechanismNotFound() => Center(
-                        child: Text(l10n.mechanismNotFound),
-                      ),
-                      MoleculeMechanismLoaded(
-                        :final mechanism,
-                        :final molecule,
-                      ) => _MechanismDetails(
-                        mechanism: mechanism,
-                        molecule: molecule,
-                      ),
-                    };
-                  },
-                ),
+                child:
+                    BlocBuilder<MoleculeMechanismCubit, MoleculeMechanismState>(
+                      builder: (context, state) {
+                        return switch (state) {
+                          MoleculeMechanismInitial() => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          MoleculeMechanismNotFound() => Center(
+                            child: Text(l10n.mechanismNotFound),
+                          ),
+                          MoleculeMechanismFailure(:final error) =>
+                            LoadErrorView(
+                              error: error,
+                              onRetry: () => context
+                                  .read<MoleculeMechanismCubit>()
+                                  .load(moleculeId, mechanismId),
+                            ),
+                          MoleculeMechanismLoaded(
+                            :final mechanism,
+                            :final molecule,
+                          ) =>
+                            _MechanismDetails(
+                              mechanism: mechanism,
+                              molecule: molecule,
+                            ),
+                        };
+                      },
+                    ),
               ),
             ],
           ),
@@ -109,10 +119,7 @@ class _MechanismDetails extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(molecule.id, style: theme.textTheme.bodyMedium),
                 const Divider(height: 24),
-                Text(
-                  mechanism.description,
-                  style: theme.textTheme.titleMedium,
-                ),
+                Text(mechanism.description, style: theme.textTheme.titleMedium),
                 const SizedBox(height: 12),
                 Text('${l10n.mechanismId}: ${mechanism.id}'),
                 const SizedBox(height: 8),
