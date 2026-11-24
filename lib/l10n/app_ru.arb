@@ -2,10 +2,13 @@
   "@@locale": "ru",
   "catalogTitle": "Каталог молекул",
   "libraryTitle": "Библиотека молекул",
-  "recordCount": "Записей: {count}",
+  "recordCount": "Показано: {count} из {total}",
   "@recordCount": {
     "placeholders": {
       "count": {
+        "type": "int"
+      },
+      "total": {
         "type": "int"
       }
     }
@@ -18,6 +21,7 @@
   "recordNotFound": "Запись не найдена",
   "loadError": "Не удалось загрузить данные. Попробуйте ещё раз.",
   "retry": "Повторить",
+  "loadMore": "Загрузить ещё",
   "dataUnavailable": "Нет данных",
   "back": "Назад",
   "darkTheme": "Тёмная тема",

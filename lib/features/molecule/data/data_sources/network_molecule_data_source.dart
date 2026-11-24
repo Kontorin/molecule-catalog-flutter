@@ -4,6 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 import '../../../../common/network/load_exception.dart';
 import '../api/molecule_api.dart';
 import '../dto/molecule_dto.dart';
+import '../dto/molecule_list_dto.dart';
 import 'i_molecule_data_source.dart';
 
 class NetworkMoleculeDataSource implements IMoleculeDataSource {
@@ -12,9 +13,23 @@ class NetworkMoleculeDataSource implements IMoleculeDataSource {
   final MoleculeApi _api;
 
   @override
-  Future<List<MoleculeDto>> getMolecules({String query = ''}) async {
-    final response = await _load(() => _api.getMolecules(query: query));
-    return response.molecules;
+  Future<MoleculeListDto> getMolecules({
+    String query = '',
+    int offset = 0,
+  }) async {
+    final response = await _load(
+      () => _api.getMolecules(query: query, offset: offset),
+    );
+    final page = response.pageMeta;
+    if (page.limit <= 0 ||
+        page.offset < 0 ||
+        page.totalCount < 0 ||
+        (page.next != null &&
+            (response.molecules.isEmpty ||
+                page.offset + page.limit <= offset))) {
+      throw const UnexpectedLoadException();
+    }
+    return response;
   }
 
   @override

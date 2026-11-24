@@ -10,8 +10,8 @@ MoleculeListDto _$MoleculeListDtoFromJson(Map<String, dynamic> json) =>
     $checkedCreate('MoleculeListDto', json, ($checkedConvert) {
       $checkKeys(
         json,
-        requiredKeys: const ['molecules'],
-        disallowNullValues: const ['molecules'],
+        requiredKeys: const ['molecules', 'page_meta'],
+        disallowNullValues: const ['molecules', 'page_meta'],
       );
       final val = MoleculeListDto(
         molecules: $checkedConvert(
@@ -20,6 +20,10 @@ MoleculeListDto _$MoleculeListDtoFromJson(Map<String, dynamic> json) =>
               .map((e) => MoleculeDto.fromJson(e as Map<String, dynamic>))
               .toList(),
         ),
+        pageMeta: $checkedConvert(
+          'page_meta',
+          (v) => MoleculePageMetaDto.fromJson(v as Map<String, dynamic>),
+        ),
       );
       return val;
-    });
+    }, fieldKeyMap: const {'pageMeta': 'page_meta'});

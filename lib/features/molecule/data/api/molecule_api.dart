@@ -8,7 +8,10 @@ class MoleculeApi {
 
   final Dio _dio;
 
-  Future<MoleculeListDto> getMolecules({String query = ''}) async {
+  Future<MoleculeListDto> getMolecules({
+    String query = '',
+    int offset = 0,
+  }) async {
     final searchQuery = query.trim();
     final isChemblId = RegExp(
       r'^CHEMBL\d+$',
@@ -18,6 +21,7 @@ class MoleculeApi {
       'molecule.json',
       queryParameters: {
         'limit': 20,
+        'offset': offset,
         if (isChemblId)
           'molecule_chembl_id': searchQuery.toUpperCase()
         else ...{

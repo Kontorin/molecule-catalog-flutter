@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/network/load_exception.dart';
 import '../../../domain/i_molecule_repository.dart';
+import '../../../domain/molecule_model.dart';
 import 'molecule_list_state.dart';
 
 class MoleculeListCubit extends Cubit<MoleculeListState> {
@@ -22,19 +23,61 @@ class MoleculeListCubit extends Cubit<MoleculeListState> {
     emit(MoleculeListState(molecules: [], query: query));
 
     try {
-      final molecules = await _repository.getMolecules(query: query);
+      final page = await _repository.getMolecules(query: query);
       if (isClosed || requestId != _requestId) return;
 
       emit(
         MoleculeListState(
           query: query,
-          molecules: molecules,
+          molecules: page.molecules,
+          totalCount: page.totalCount,
+          nextOffset: page.nextOffset,
           status: MoleculeListStatus.loaded,
         ),
       );
     } on LoadException catch (error) {
       if (isClosed || requestId != _requestId) return;
       emit(state.copyWith(status: MoleculeListStatus.failure, error: error));
+    }
+  }
+
+  Future<void> loadMore({bool retry = false}) async {
+    if (isClosed || state.nextOffset == null) return;
+    if (state.status != MoleculeListStatus.loaded &&
+        !(retry && state.status == MoleculeListStatus.loadMoreFailure)) {
+      return;
+    }
+
+    final requestId = _requestId;
+    final query = state.query;
+    final offset = state.nextOffset!;
+    emit(state.copyWith(status: MoleculeListStatus.loadingMore));
+
+    try {
+      final page = await _repository.getMolecules(query: query, offset: offset);
+      if (isClosed || requestId != _requestId) return;
+
+      final byId = <String, MoleculeModel>{
+        for (final molecule in state.molecules) molecule.id: molecule,
+        for (final molecule in page.molecules) molecule.id: molecule,
+      };
+      emit(
+        MoleculeListState(
+          molecules: byId.values.toList(),
+          query: query,
+          totalCount: page.totalCount,
+          nextOffset: page.nextOffset,
+          status: MoleculeListStatus.loaded,
+        ),
+      );
+    } on LoadException catch (error) {
+      if (isClosed || requestId != _requestId) return;
+      emit(
+        state.copyWith(
+          status: MoleculeListStatus.loadMoreFailure,
+          error: error,
+        ),
+      );
     }
   }
 

@@ -2,10 +2,13 @@
   "@@locale": "en",
   "catalogTitle": "Molecule catalog",
   "libraryTitle": "Molecule library",
-  "recordCount": "Records: {count}",
+  "recordCount": "Showing: {count} of {total}",
   "@recordCount": {
     "placeholders": {
       "count": {
+        "type": "int"
+      },
+      "total": {
         "type": "int"
       }
     }
@@ -18,6 +21,7 @@
   "recordNotFound": "Record not found",
   "loadError": "Unable to load data. Please try again.",
   "retry": "Retry",
+  "loadMore": "Load more",
   "dataUnavailable": "No data",
   "back": "Back",
   "darkTheme": "Dark theme",
