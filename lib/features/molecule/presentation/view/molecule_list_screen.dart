@@ -32,6 +32,7 @@ class _MoleculeListScreenState extends State<MoleculeListScreen> {
 
   void _loadNextPage() {
     if (_scrollController.hasClients &&
+        _scrollController.position.hasContentDimensions &&
         _scrollController.position.extentAfter < 300) {
       context.read<MoleculeListCubit>().loadMore();
     }
