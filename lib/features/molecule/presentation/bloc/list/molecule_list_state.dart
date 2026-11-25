@@ -1,32 +1,59 @@
+import '../../../../../common/network/load_exception.dart';
 import '../../../domain/molecule_model.dart';
 
-enum MoleculeListStatus { loading, loaded }
+enum MoleculeListStatus {
+  loading,
+  loaded,
+  failure,
+  loadingMore,
+  loadMoreFailure,
+}
 
 class MoleculeListState {
   MoleculeListState({
     required List<MoleculeModel> molecules,
     required this.query,
-    List<MoleculeModel> allMolecules = const [],
+    this.totalCount = 0,
+    this.nextOffset,
     this.status = MoleculeListStatus.loading,
-  }) : molecules = List.unmodifiable(molecules),
-       allMolecules = List.unmodifiable(allMolecules);
+    this.error,
+  }) : assert(
+         (status == MoleculeListStatus.failure ||
+                 status == MoleculeListStatus.loadMoreFailure) ==
+             (error != null),
+       ),
+       molecules = List.unmodifiable(molecules);
 
   final List<MoleculeModel> molecules;
   final String query;
-  final List<MoleculeModel> allMolecules;
+  final int totalCount;
+  final int? nextOffset;
   final MoleculeListStatus status;
+  final LoadException? error;
+
+  bool get hasLoadedPage => switch (status) {
+    MoleculeListStatus.loaded ||
+    MoleculeListStatus.loadingMore ||
+    MoleculeListStatus.loadMoreFailure => true,
+    _ => false,
+  };
 
   MoleculeListState copyWith({
-    List<MoleculeModel>? molecules,
-    String? query,
-    List<MoleculeModel>? allMolecules,
     MoleculeListStatus? status,
+    LoadException? error,
   }) {
+    final nextStatus = status ?? this.status;
     return MoleculeListState(
-      molecules: molecules ?? this.molecules,
-      query: query ?? this.query,
-      allMolecules: allMolecules ?? this.allMolecules,
-      status: status ?? this.status,
+      molecules: molecules,
+      query: query,
+      totalCount: totalCount,
+      nextOffset: nextOffset,
+      status: nextStatus,
+      error:
+          nextStatus == MoleculeListStatus.failure ||
+              nextStatus == MoleculeListStatus.loadMoreFailure
+          ? error ?? this.error
+          : null,
     );
   }
 }

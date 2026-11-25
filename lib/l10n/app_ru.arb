@@ -2,17 +2,27 @@
   "@@locale": "ru",
   "catalogTitle": "Каталог молекул",
   "libraryTitle": "Библиотека молекул",
-  "recordCount": "Записей: {count}",
+  "recordCount": "Показано: {count} из {total}",
   "@recordCount": {
     "placeholders": {
       "count": {
         "type": "int"
+      },
+      "total": {
+        "type": "int"
       }
     }
   },
-  "searchHint": "Поиск по названию",
+  "searchHint": "Название или ChEMBL ID",
   "clearSearch": "Очистить поиск",
   "nothingFound": "Ничего не найдено",
+  "networkError": "Не удалось подключиться. Проверьте соединение с интернетом.",
+  "timeoutError": "Сервер не ответил вовремя. Попробуйте ещё раз.",
+  "recordNotFound": "Запись не найдена",
+  "loadError": "Не удалось загрузить данные. Попробуйте ещё раз.",
+  "retry": "Повторить",
+  "loadMore": "Загрузить ещё",
+  "dataUnavailable": "Нет данных",
   "back": "Назад",
   "darkTheme": "Тёмная тема",
   "language": "Язык",
@@ -24,8 +34,16 @@
   "molecularWeightUnit": "Da",
   "moleculeNotFound": "Молекула не найдена",
   "structurePlaceholder": "Изображение структуры недоступно",
+  "moleculeStructure": "Структура молекулы {name}",
+  "@moleculeStructure": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "mechanismsTitle": "Механизмы действия",
-  "noMechanisms": "В этом каталоге нет данных о механизме действия",
+  "noMechanisms": "В ChEMBL нет данных о механизме действия для этой молекулы",
   "mechanismId": "ID механизма",
   "target": "Мишень",
   "mechanismTitle": "Механизм действия",

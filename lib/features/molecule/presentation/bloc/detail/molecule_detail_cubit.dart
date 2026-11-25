@@ -1,7 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../common/network/load_exception.dart';
 import '../../../../mechanism/domain/i_mechanism_repository.dart';
+import '../../../../mechanism/domain/mechanism_model.dart';
 import '../../../domain/i_molecule_repository.dart';
+import '../../../domain/molecule_model.dart';
 import 'molecule_detail_state.dart';
 
 class MoleculeDetailCubit extends Cubit<MoleculeDetailState> {
@@ -12,23 +15,28 @@ class MoleculeDetailCubit extends Cubit<MoleculeDetailState> {
   final IMechanismRepository _mechanismRepository;
 
   Future<void> load(String id) async {
-    final molecule = await _repository.getMolecule(id);
     if (isClosed) return;
+    emit(const MoleculeDetailInitial());
 
-    if (molecule == null) {
-      emit(const MoleculeDetailNotFound());
-    } else {
-      final mechanisms = await _mechanismRepository.getMechanismsForMolecule(
-        molecule.id,
-      );
+    try {
+      final results = await Future.wait<Object?>([
+        _repository.getMolecule(id),
+        _mechanismRepository.getMechanismsForMolecule(id),
+      ]);
       if (isClosed) return;
 
-      emit(
-        MoleculeDetailLoaded(
-          molecule: molecule,
-          mechanisms: mechanisms,
-        ),
-      );
+      final molecule = results[0] as MoleculeModel?;
+      final mechanisms = results[1] as List<MechanismModel>;
+
+      if (molecule == null) {
+        emit(const MoleculeDetailNotFound());
+        return;
+      }
+
+      emit(MoleculeDetailLoaded(molecule: molecule, mechanisms: mechanisms));
+    } on LoadException catch (error) {
+      if (isClosed) return;
+      emit(MoleculeDetailFailure(error));
     }
   }
 }

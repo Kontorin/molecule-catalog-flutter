@@ -2,17 +2,27 @@
   "@@locale": "en",
   "catalogTitle": "Molecule catalog",
   "libraryTitle": "Molecule library",
-  "recordCount": "Records: {count}",
+  "recordCount": "Showing: {count} of {total}",
   "@recordCount": {
     "placeholders": {
       "count": {
         "type": "int"
+      },
+      "total": {
+        "type": "int"
       }
     }
   },
-  "searchHint": "Search by name",
+  "searchHint": "Name or ChEMBL ID",
   "clearSearch": "Clear search",
   "nothingFound": "Nothing found",
+  "networkError": "Unable to connect. Check your internet connection.",
+  "timeoutError": "The server did not respond in time. Please try again.",
+  "recordNotFound": "Record not found",
+  "loadError": "Unable to load data. Please try again.",
+  "retry": "Retry",
+  "loadMore": "Load more",
+  "dataUnavailable": "No data",
   "back": "Back",
   "darkTheme": "Dark theme",
   "language": "Language",
@@ -24,8 +34,16 @@
   "molecularWeightUnit": "Da",
   "moleculeNotFound": "Molecule not found",
   "structurePlaceholder": "Structure image unavailable",
+  "moleculeStructure": "Structure of {name}",
+  "@moleculeStructure": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "mechanismsTitle": "Mechanisms of action",
-  "noMechanisms": "No mechanism data in this catalog",
+  "noMechanisms": "No mechanism data for this molecule in ChEMBL",
   "mechanismId": "Mechanism ID",
   "target": "Target",
   "mechanismTitle": "Mechanism of action",

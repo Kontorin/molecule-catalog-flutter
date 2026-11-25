@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../common/navigation/app_routes.dart';
 import '../../../../common/widgets/app_settings_actions.dart';
+import '../../../../common/widgets/load_error_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../mechanism/domain/i_mechanism_repository.dart';
 import '../../../mechanism/domain/mechanism_model.dart';
@@ -11,6 +12,7 @@ import '../../domain/i_molecule_repository.dart';
 import '../../domain/molecule_model.dart';
 import '../bloc/mechanism/molecule_mechanism_cubit.dart';
 import '../bloc/mechanism/molecule_mechanism_state.dart';
+import '../utils/catalog_value_presentation.dart';
 
 class MoleculeMechanismScreen extends StatelessWidget {
   const MoleculeMechanismScreen({
@@ -56,25 +58,34 @@ class MoleculeMechanismScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: BlocBuilder<MoleculeMechanismCubit, MoleculeMechanismState>(
-                  builder: (context, state) {
-                    return switch (state) {
-                      MoleculeMechanismInitial() => const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      MoleculeMechanismNotFound() => Center(
-                        child: Text(l10n.mechanismNotFound),
-                      ),
-                      MoleculeMechanismLoaded(
-                        :final mechanism,
-                        :final molecule,
-                      ) => _MechanismDetails(
-                        mechanism: mechanism,
-                        molecule: molecule,
-                      ),
-                    };
-                  },
-                ),
+                child:
+                    BlocBuilder<MoleculeMechanismCubit, MoleculeMechanismState>(
+                      builder: (context, state) {
+                        return switch (state) {
+                          MoleculeMechanismInitial() => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                          MoleculeMechanismNotFound() => Center(
+                            child: Text(l10n.mechanismNotFound),
+                          ),
+                          MoleculeMechanismFailure(:final error) =>
+                            LoadErrorView(
+                              error: error,
+                              onRetry: () => context
+                                  .read<MoleculeMechanismCubit>()
+                                  .load(moleculeId, mechanismId),
+                            ),
+                          MoleculeMechanismLoaded(
+                            :final mechanism,
+                            :final molecule,
+                          ) =>
+                            _MechanismDetails(
+                              mechanism: mechanism,
+                              molecule: molecule,
+                            ),
+                        };
+                      },
+                    ),
               ),
             ],
           ),
@@ -110,21 +121,29 @@ class _MechanismDetails extends StatelessWidget {
                 Text(molecule.id, style: theme.textTheme.bodyMedium),
                 const Divider(height: 24),
                 Text(
-                  mechanism.description,
+                  mechanism.description.orUnavailable(l10n),
                   style: theme.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 12),
                 Text('${l10n.mechanismId}: ${mechanism.id}'),
                 const SizedBox(height: 8),
-                Text('${l10n.actionType}: ${mechanism.actionType}'),
+                Text(
+                  '${l10n.actionType}: ${mechanism.actionType.orUnavailable(l10n)}',
+                ),
                 const SizedBox(height: 8),
-                Text('${l10n.target}: ${mechanism.targetName}'),
+                Text(
+                  '${l10n.target}: ${mechanism.targetName.orUnavailable(l10n)}',
+                ),
                 const SizedBox(height: 8),
-                Text('${l10n.targetId}: ${mechanism.targetId}'),
+                Text(
+                  '${l10n.targetId}: ${mechanism.targetId.orUnavailable(l10n)}',
+                ),
                 const Divider(height: 24),
                 Text('${l10n.sourceMoleculeId}: ${mechanism.moleculeId}'),
                 const SizedBox(height: 8),
-                Text('${l10n.parentMoleculeId}: ${mechanism.parentMoleculeId}'),
+                Text(
+                  '${l10n.parentMoleculeId}: ${mechanism.parentMoleculeId.orUnavailable(l10n)}',
+                ),
               ],
             ),
           ),

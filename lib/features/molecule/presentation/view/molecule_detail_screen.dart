@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../common/navigation/app_routes.dart';
 import '../../../../common/widgets/app_settings_actions.dart';
+import '../../../../common/widgets/load_error_view.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../mechanism/domain/i_mechanism_repository.dart';
 import '../../../mechanism/domain/mechanism_model.dart';
@@ -11,6 +12,9 @@ import '../../domain/i_molecule_repository.dart';
 import '../../domain/molecule_model.dart';
 import '../bloc/detail/molecule_detail_cubit.dart';
 import '../bloc/detail/molecule_detail_state.dart';
+import '../utils/catalog_value_presentation.dart';
+import '../utils/molecule_properties_presentation.dart';
+import 'widgets/molecule_structure_image.dart';
 
 class MoleculeDetailScreen extends StatelessWidget {
   const MoleculeDetailScreen({super.key, required this.id});
@@ -60,13 +64,19 @@ class MoleculeDetailScreen extends StatelessWidget {
                       MoleculeDetailNotFound() => Center(
                         child: Text(l10n.moleculeNotFound),
                       ),
+                      MoleculeDetailFailure(:final error) => LoadErrorView(
+                        error: error,
+                        onRetry: () =>
+                            context.read<MoleculeDetailCubit>().load(id),
+                      ),
                       MoleculeDetailLoaded(
                         :final molecule,
                         :final mechanisms,
-                      ) => _MoleculeDetails(
-                        molecule: molecule,
-                        mechanisms: mechanisms,
-                      ),
+                      ) =>
+                        _MoleculeDetails(
+                          molecule: molecule,
+                          mechanisms: mechanisms,
+                        ),
                     };
                   },
                 ),
@@ -80,10 +90,7 @@ class MoleculeDetailScreen extends StatelessWidget {
 }
 
 class _MoleculeDetails extends StatelessWidget {
-  const _MoleculeDetails({
-    required this.molecule,
-    required this.mechanisms,
-  });
+  const _MoleculeDetails({required this.molecule, required this.mechanisms});
 
   final MoleculeModel molecule;
   final List<MechanismModel> mechanisms;
@@ -112,24 +119,30 @@ class _MoleculeDetails extends StatelessWidget {
                     fontFamily: 'monospace',
                   ),
                 ),
+                const SizedBox(height: 16),
+                Center(
+                  child: SizedBox(
+                    width: 280,
+                    child: MoleculeStructureImage(molecule: molecule),
+                  ),
+                ),
                 const Divider(height: 24),
                 Text(
                   l10n.molecularProperties,
                   style: theme.textTheme.titleSmall,
                 ),
                 const SizedBox(height: 12),
-                Text('${l10n.formula}: ${molecule.properties.formula}'),
+                Text(
+                  '${l10n.formula}: '
+                  '${molecule.properties.formattedFormula(l10n)}',
+                ),
                 const SizedBox(height: 8),
                 Text(
                   '${l10n.molecularWeight}: '
-                  '${molecule.properties.molecularWeight} '
-                  '${l10n.molecularWeightUnit}',
+                  '${molecule.properties.formattedMolecularWeight(l10n)}',
                 ),
                 const Divider(height: 24),
-                Text(
-                  l10n.mechanismsTitle,
-                  style: theme.textTheme.titleSmall,
-                ),
+                Text(l10n.mechanismsTitle, style: theme.textTheme.titleSmall),
                 const SizedBox(height: 12),
                 if (mechanisms.isEmpty)
                   Text(l10n.noMechanisms)
@@ -137,10 +150,10 @@ class _MoleculeDetails extends StatelessWidget {
                   for (final mechanism in mechanisms)
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: Text(mechanism.description),
+                      title: Text(mechanism.description.orUnavailable(l10n)),
                       subtitle: Text(
                         '${l10n.mechanismId}: ${mechanism.id}\n'
-                        '${l10n.target}: ${mechanism.targetName}',
+                        '${l10n.target}: ${mechanism.targetName.orUnavailable(l10n)}',
                       ),
                       trailing: Tooltip(
                         message: l10n.openMechanism,

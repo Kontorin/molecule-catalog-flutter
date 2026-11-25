@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../common/theme/image_sources.dart';
 import '../../../../../l10n/app_localizations.dart';
 import '../../../domain/molecule_model.dart';
+import '../../utils/molecule_properties_presentation.dart';
+import 'molecule_structure_image.dart';
 
 class MoleculeCard extends StatelessWidget {
-  const MoleculeCard({
-    super.key,
-    required this.molecule,
-    required this.onTap,
-  });
+  const MoleculeCard({super.key, required this.molecule, required this.onTap});
 
   final MoleculeModel molecule;
   final VoidCallback onTap;
@@ -27,13 +24,9 @@ class MoleculeCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              Tooltip(
-                message: l10n.structurePlaceholder,
-                child: Icon(
-                  ImageSources.moleculePlaceholder,
-                  size: 40,
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
+              SizedBox.square(
+                dimension: 88,
+                child: MoleculeStructureImage(molecule: molecule),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -56,7 +49,8 @@ class MoleculeCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '${l10n.formula}: ${molecule.properties.formula}',
+                      '${l10n.formula}: '
+                      '${molecule.properties.formattedFormula(l10n)}',
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
