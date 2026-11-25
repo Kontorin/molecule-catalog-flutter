@@ -11,6 +11,8 @@ import '../dto/molecule_structures_dto.dart';
 extension MoleculeDtoMapper on MoleculeDto {
   MoleculeModel toModel() {
     final displayName = name?.trim();
+    // List responses include the type instead of the full structure.
+    final hasStructure = structures != null || structureType == 'MOL';
 
     return MoleculeModel(
       atcClassifications: List.unmodifiable(atcClassifications ?? const []),
@@ -27,7 +29,7 @@ extension MoleculeDtoMapper on MoleculeDto {
       inorganicFlag: inorganicFlag ?? -1,
       maxPhase: maxPhase ?? '',
       id: id,
-      imageUrl: structures == null
+      imageUrl: !hasStructure
           ? null
           : Uri.parse(DioClient.baseUrl)
                 .resolve('image/${Uri.encodeComponent(id)}.svg')

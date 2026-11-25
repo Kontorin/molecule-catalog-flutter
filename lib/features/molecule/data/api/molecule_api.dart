@@ -22,12 +22,12 @@ class MoleculeApi {
       queryParameters: {
         'limit': 20,
         'offset': offset,
+        'only':
+            'molecule_chembl_id,pref_name,molecule_properties,structure_type',
         if (isChemblId)
           'molecule_chembl_id': searchQuery.toUpperCase()
-        else ...{
-          'pref_name__isnull': false,
-          if (searchQuery.isNotEmpty) 'pref_name__icontains': searchQuery,
-        },
+        else if (searchQuery.isNotEmpty)
+          'pref_name__icontains': searchQuery,
         'order_by': 'molecule_chembl_id',
       },
     );
