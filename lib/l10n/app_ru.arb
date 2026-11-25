@@ -34,6 +34,14 @@
   "molecularWeightUnit": "Da",
   "moleculeNotFound": "Молекула не найдена",
   "structurePlaceholder": "Изображение структуры недоступно",
+  "moleculeStructure": "Структура молекулы {name}",
+  "@moleculeStructure": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "mechanismsTitle": "Механизмы действия",
   "noMechanisms": "В ChEMBL нет данных о механизме действия для этой молекулы",
   "mechanismId": "ID механизма",

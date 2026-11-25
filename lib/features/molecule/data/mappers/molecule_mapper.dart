@@ -1,3 +1,4 @@
+import '../../../../common/network/dio_client.dart';
 import '../../domain/molecule_hierarchy_model.dart';
 import '../../domain/molecule_model.dart';
 import '../../domain/molecule_properties_model.dart';
@@ -26,6 +27,12 @@ extension MoleculeDtoMapper on MoleculeDto {
       inorganicFlag: inorganicFlag ?? -1,
       maxPhase: maxPhase ?? '',
       id: id,
+      imageUrl: structures == null
+          ? null
+          : Uri.parse(DioClient.baseUrl)
+                .resolve('image/${Uri.encodeComponent(id)}.svg')
+                .replace(queryParameters: {'dimensions': '300'})
+                .toString(),
       hierarchy: (hierarchy ?? const MoleculeHierarchyDto()).toModel(),
       properties: (properties ?? const MoleculePropertiesDto()).toModel(),
       structures: (structures ?? const MoleculeStructuresDto()).toModel(),

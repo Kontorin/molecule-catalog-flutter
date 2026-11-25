@@ -14,6 +14,7 @@ import '../bloc/detail/molecule_detail_cubit.dart';
 import '../bloc/detail/molecule_detail_state.dart';
 import '../utils/catalog_value_presentation.dart';
 import '../utils/molecule_properties_presentation.dart';
+import 'widgets/molecule_structure_image.dart';
 
 class MoleculeDetailScreen extends StatelessWidget {
   const MoleculeDetailScreen({super.key, required this.id});
@@ -116,6 +117,13 @@ class _MoleculeDetails extends StatelessWidget {
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                     fontFamily: 'monospace',
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: SizedBox(
+                    width: 280,
+                    child: MoleculeStructureImage(molecule: molecule),
                   ),
                 ),
                 const Divider(height: 24),

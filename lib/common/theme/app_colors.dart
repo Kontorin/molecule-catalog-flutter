@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  // ChEMBL draws black bonds, so the structure canvas stays light in both themes.
+  static const structureBackground = Color(0xFFFFFFFF);
+
   static const lightPrimary = Color(0xFF006B5F);
   static const lightSurface = Color(0xFFF7FAF7);
   static const lightOnSurface = Color(0xFF191C1B);

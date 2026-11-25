@@ -18,6 +18,7 @@ class MoleculeModel {
     required this.inorganicFlag,
     required this.maxPhase,
     required this.id,
+    required this.imageUrl,
     required this.hierarchy,
     required this.properties,
     required this.structures,
@@ -55,6 +56,7 @@ class MoleculeModel {
   final int inorganicFlag;
   final Object maxPhase;
   final String id;
+  final String? imageUrl;
   final MoleculeHierarchyModel hierarchy;
   final MoleculePropertiesModel properties;
   final MoleculeStructuresModel structures;
